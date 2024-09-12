@@ -1,5 +1,12 @@
 <script setup>
+import { ref } from "vue";
 import Budged from "./components/Budged.vue";
+
+const budged = ref(0);
+
+const defineBudged = (quantity) => {
+  budged.value = quantity;
+};
 </script>
 
 <template>
@@ -7,7 +14,7 @@ import Budged from "./components/Budged.vue";
     <header>
       <h1>Expenses Manager</h1>
       <div class="container-header container shadow">
-        <Budged />
+        <Budged v-if="budged === 0" @define-budged="defineBudged" />
       </div>
     </header>
   </div>
