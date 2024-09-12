@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import Budged from "./components/Budged.vue";
+import ManageBudged from "./components/ManageBudged.vue";
 
 const budged = ref(0);
 
@@ -15,6 +16,7 @@ const defineBudged = (quantity) => {
       <h1>Expenses Manager</h1>
       <div class="container-header container shadow">
         <Budged v-if="budged === 0" @define-budged="defineBudged" />
+        <ManageBudged v-else />
       </div>
     </header>
   </div>

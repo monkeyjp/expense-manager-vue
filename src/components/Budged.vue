@@ -8,12 +8,13 @@ const error = ref("");
 const emits = defineEmits(["define-budged"]);
 
 const defineBudged = () => {
-  if (budged.value <= 0) {
+  if (budged.value <= 0 || budged.value == "") {
     error.value = "Budged not valid";
 
     setTimeout(() => {
       error.value = "";
     }, 2000);
+    return;
   }
   emits("define-budged", budged.value);
 };
