@@ -4,9 +4,11 @@ import Budged from "./components/Budged.vue";
 import ManageBudged from "./components/ManageBudged.vue";
 
 const budged = ref(0);
+const available = ref(0);
 
 const defineBudged = (quantity) => {
   budged.value = quantity;
+  available.value = quantity;
 };
 </script>
 
@@ -16,7 +18,7 @@ const defineBudged = (quantity) => {
       <h1>Expenses Manager</h1>
       <div class="container-header container shadow">
         <Budged v-if="budged === 0" @define-budged="defineBudged" />
-        <ManageBudged v-else />
+        <ManageBudged v-else :budged="budged" :available="available" />
       </div>
     </header>
   </div>

@@ -1,5 +1,14 @@
 <script setup>
 import image from "../assets/img/grafico.jpg";
+
+const props = defineProps({
+  budged: {
+    type: Number,
+    required: true,
+  },
+  available: Number,
+  required: true,
+});
 </script>
 
 <template>
@@ -9,8 +18,8 @@ import image from "../assets/img/grafico.jpg";
     </div>
     <div class="budged-container">
       <button class="reset-app">Reset App</button>
-      <p><span>Budged:</span>$0</p>
-      <p><span>Available:</span>$0</p>
+      <p><span>Budged:</span>$ {{ budged }}</p>
+      <p><span>Available:</span>$ {{ available }}</p>
       <p><span>Spent:</span>$0</p>
     </div>
   </div>
