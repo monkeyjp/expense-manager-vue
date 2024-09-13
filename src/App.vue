@@ -1,7 +1,15 @@
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import Budged from "./components/Budged.vue";
 import ManageBudged from "./components/ManageBudged.vue";
+import Modal from "./components/Modal.vue";
+
+import newExpenseIcon from "./assets/img/nuevo-gasto.svg";
+
+const modal = reactive({
+  show: false,
+  animation: false,
+});
 
 const budged = ref(0);
 const available = ref(0);
@@ -9,6 +17,20 @@ const available = ref(0);
 const defineBudged = (quantity) => {
   budged.value = quantity;
   available.value = quantity;
+};
+
+const showModal = () => {
+  modal.show = true;
+  setTimeout(() => {
+    modal.animation = true;
+  }, 300);
+};
+
+const closeModal = () => {
+  modal.animation = false;
+  setTimeout(() => {
+    modal.show = false;
+  }, 300);
 };
 </script>
 
@@ -21,6 +43,12 @@ const defineBudged = (quantity) => {
         <ManageBudged v-else :budged="budged" :available="available" />
       </div>
     </header>
+    <main v-if="budged > 0">
+      <div class="create-expense">
+        <img :src="newExpenseIcon" alt="new expense icon" @click="showModal" />
+      </div>
+      <Modal v-if="modal.show" @close-modal="closeModal" :modal="modal" />
+    </main>
   </div>
 </template>
 
@@ -77,5 +105,16 @@ header h1 {
   background-color: var(--blanco);
   border-radius: 1.2rem;
   padding: 5rem;
+}
+
+.create-expense {
+  position: fixed;
+  bottom: 5rem;
+  right: 5rem;
+}
+
+.create-expense img {
+  width: 5rem;
+  cursor: pointer;
 }
 </style>
