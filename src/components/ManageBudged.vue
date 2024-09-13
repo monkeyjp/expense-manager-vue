@@ -1,5 +1,6 @@
 <script setup>
 import image from "../assets/img/grafico.jpg";
+import { quantityFormater } from "../helpers";
 
 const props = defineProps({
   budged: {
@@ -18,8 +19,8 @@ const props = defineProps({
     </div>
     <div class="budged-container">
       <button class="reset-app">Reset App</button>
-      <p><span>Budged:</span>$ {{ budged }}</p>
-      <p><span>Available:</span>$ {{ available }}</p>
+      <p><span>Budged:</span> {{ quantityFormater(available) }}</p>
+      <p><span>Available:</span> {{ quantityFormater(available) }}</p>
       <p><span>Spent:</span>$0</p>
     </div>
   </div>
