@@ -3,6 +3,7 @@ import { ref, reactive } from "vue";
 import Budged from "./components/Budged.vue";
 import ManageBudged from "./components/ManageBudged.vue";
 import Modal from "./components/Modal.vue";
+import { IdGenerator } from "./helpers";
 
 import newExpenseIcon from "./assets/img/nuevo-gasto.svg";
 
@@ -22,6 +23,8 @@ const expense = reactive({
   date: Date.now(),
 });
 
+const expenses = ref([]);
+
 const defineBudged = (amount) => {
   budged.value = amount;
   available.value = amount;
@@ -39,6 +42,21 @@ const closeModal = () => {
   setTimeout(() => {
     modal.show = false;
   }, 300);
+};
+
+const saveExpense = () => {
+  expenses.value.push({
+    ...expense,
+    id: IdGenerator(),
+  });
+  closeModal();
+  Object.assign(expense, {
+    name: "",
+    amount: "",
+    category: "",
+    id: null,
+    date: Date.now(),
+  });
 };
 </script>
 
@@ -58,6 +76,7 @@ const closeModal = () => {
       <Modal
         v-if="modal.show"
         @close-modal="closeModal"
+        @save-expense="saveExpense"
         :modal="modal"
         v-model:name="expense.name"
         v-model:amount="expense.amount"

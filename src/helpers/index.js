@@ -4,3 +4,10 @@ export const quantityFormater = (quantity) => {
         currency: "USD"
     })
 }
+
+export const IdGenerator = () => {
+    const date = Date.now().toString(36)
+    const random = Math.random().toString(36).substring(2)
+    return random + date
+}
+
