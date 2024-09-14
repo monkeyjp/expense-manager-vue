@@ -14,9 +14,17 @@ const modal = reactive({
 const budged = ref(0);
 const available = ref(0);
 
-const defineBudged = (quantity) => {
-  budged.value = quantity;
-  available.value = quantity;
+const expense = reactive({
+  name: "",
+  amount: "",
+  category: "",
+  id: null,
+  date: Date.now(),
+});
+
+const defineBudged = (amount) => {
+  budged.value = amount;
+  available.value = amount;
 };
 
 const showModal = () => {
@@ -47,7 +55,14 @@ const closeModal = () => {
       <div class="create-expense">
         <img :src="newExpenseIcon" alt="new expense icon" @click="showModal" />
       </div>
-      <Modal v-if="modal.show" @close-modal="closeModal" :modal="modal" />
+      <Modal
+        v-if="modal.show"
+        @close-modal="closeModal"
+        :modal="modal"
+        v-model:name="expense.name"
+        v-model:amount="expense.amount"
+        v-model:category="expense.category"
+      />
     </main>
   </div>
 </template>

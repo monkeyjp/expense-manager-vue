@@ -1,13 +1,52 @@
 <script setup>
+import { ref } from "vue";
+import Alert from "./Alert.vue";
 import closeModal from "../assets/img/cerrar.svg";
 
-const emit = defineEmits(["close-modal"]);
+const error = ref("");
+
+const emit = defineEmits([
+  "close-modal",
+  "update:name",
+  "update:amount",
+  "update:category",
+]);
 const props = defineProps({
   modal: {
     type: Object,
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
+  amount: {
+    type: [String, Number],
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true,
+  },
 });
+
+const addExpense = () => {
+  const { name, amount, category } = props;
+  if ([name, amount, category].includes("")) {
+    error.value = "All Fields Are Required";
+    setTimeout(() => {
+      error.value = "";
+    }, 2000);
+    return;
+  }
+  if (amount <= 0) {
+    error.value = "Invalid Amount";
+    setTimeout(() => {
+      error.value = "";
+    }, 2000);
+    return;
+  }
+};
 </script>
 
 <template>
@@ -23,23 +62,36 @@ const props = defineProps({
       class="container form-container"
       :class="[modal.animation ? 'animation' : 'close']"
     >
-      <form class="new-expense">
+      <form class="new-expense" @submit.prevent="addExpense">
         <legend>Add Expense</legend>
+        <Alert v-if="error">{{ error }}</Alert>
         <div class="campo">
           <label for="name">Expense Name:</label>
-          <input type="text" id="name" placeholder="Add Expense Name" />
+          <input
+            type="text"
+            id="name"
+            placeholder="Add Expense Name"
+            :value="name"
+            @input="$emit('update:name', $event.target.value)"
+          />
         </div>
         <div class="campo">
-          <label for="quantity">Quantity:</label>
+          <label for="amount">Amount:</label>
           <input
             type="number"
-            id="quantity"
-            placeholder="Add Expense Quantity, Ex. 300"
+            id="amount"
+            placeholder="Add Expense Amount, Ex. 300"
+            :value="amount"
+            @input="$emit('update:amount', +$event.target.value)"
           />
         </div>
         <div class="campo">
           <label for="category">Category:</label>
-          <select id="category">
+          <select
+            id="category"
+            :value="category"
+            @input="$emit('update:category', $event.target.value)"
+          >
             <option value="">-- Select --</option>
             <option value="savings">Savings</option>
             <option value="food">Food</option>
