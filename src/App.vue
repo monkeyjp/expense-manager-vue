@@ -3,6 +3,7 @@ import { ref, reactive } from "vue";
 import Budged from "./components/Budged.vue";
 import ManageBudged from "./components/ManageBudged.vue";
 import Modal from "./components/Modal.vue";
+import Expense from "./components/Expense.vue";
 import { IdGenerator } from "./helpers";
 
 import newExpenseIcon from "./assets/img/nuevo-gasto.svg";
@@ -61,7 +62,7 @@ const saveExpense = () => {
 </script>
 
 <template>
-  <div>
+  <div :class="{ fix: modal.show }">
     <header>
       <h1>Expenses Manager</h1>
       <div class="container-header container shadow">
@@ -70,6 +71,17 @@ const saveExpense = () => {
       </div>
     </header>
     <main v-if="budged > 0">
+      <div class="expense-list container">
+        <h2>
+          {{ expenses.length > 0 ? "Expenses" : "There are no expenses" }}
+        </h2>
+        <Expense
+          v-for="expense in expenses"
+          :key="expense.id"
+          :expense="expense"
+        />
+      </div>
+
       <div class="create-expense">
         <img :src="newExpenseIcon" alt="new expense icon" @click="showModal" />
       </div>
@@ -115,6 +127,12 @@ h1 {
 h2 {
   font-size: 3rem;
 }
+
+.fix {
+  overflow: hidden;
+  height: 100vh;
+}
+
 header {
   background-color: var(--azul);
 }
@@ -150,5 +168,14 @@ header h1 {
 .create-expense img {
   width: 5rem;
   cursor: pointer;
+}
+
+.expense-list {
+  margin-top: 10rem;
+}
+
+.expense-list h2 {
+  font-weight: 900;
+  color: var(--gris-oscuro);
 }
 </style>

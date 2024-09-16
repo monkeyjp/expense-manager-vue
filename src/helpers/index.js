@@ -11,3 +11,13 @@ export const IdGenerator = () => {
     return random + date
 }
 
+export const dateFormater = (date) => {
+    const newDate = new Date(date)
+    const options = {
+        year: "numeric",
+        month: "long",
+        day: "2-digit"
+    }
+    return newDate.toLocaleDateString("en-US", options)
+}
+
