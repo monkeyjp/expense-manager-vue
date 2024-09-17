@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import Alert from "./Alert.vue";
 import closeModal from "../assets/img/cerrar.svg";
 
@@ -33,10 +33,16 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  id: {
+    type: [String, null],
+    required: true,
+  },
 });
 
+const oldAmount = props.amount;
+
 const addExpense = () => {
-  const { name, amount, category, available } = props;
+  const { name, amount, category, available, id } = props;
   if ([name, amount, category].includes("")) {
     error.value = "All Fields Are Required";
     setTimeout(() => {
@@ -51,15 +57,29 @@ const addExpense = () => {
     }, 2000);
     return;
   }
-  if (amount > available) {
-    error.value = "You cant spend more than you have";
-    setTimeout(() => {
-      error.value = "";
-    }, 2000);
-    return;
+  if (id) {
+    if (amount > oldAmount + available) {
+      error.value = "You cant spend more than you have";
+      setTimeout(() => {
+        error.value = "";
+      }, 2000);
+      return;
+    }
+  } else {
+    if (amount > available) {
+      error.value = "You cant spend more than you have";
+      setTimeout(() => {
+        error.value = "";
+      }, 2000);
+      return;
+    }
   }
   emit("save-expense");
 };
+
+const isEditing = computed(() => {
+  return props.id;
+});
 </script>
 
 <template>
@@ -76,7 +96,7 @@ const addExpense = () => {
       :class="[modal.animation ? 'animation' : 'close']"
     >
       <form class="new-expense" @submit.prevent="addExpense">
-        <legend>Add Expense</legend>
+        <legend>{{ isEditing ? "Save Changes" : "Add Expense" }}</legend>
         <Alert v-if="error">{{ error }}</Alert>
         <div class="campo">
           <label for="name">Expense Name:</label>
@@ -115,7 +135,10 @@ const addExpense = () => {
             <option value="subscriptions">Subscriptions</option>
           </select>
         </div>
-        <input type="submit" value="Add Expense" />
+        <input
+          type="submit"
+          :value="[isEditing ? 'Save Changes' : 'Add Expense']"
+        />
       </form>
     </div>
   </div>

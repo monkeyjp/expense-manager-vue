@@ -143,6 +143,7 @@ const selectExpense = (id) => {
         @save-expense="saveExpense"
         :modal="modal"
         :available="available"
+        :id="expense.id"
         v-model:name="expense.name"
         v-model:amount="expense.amount"
         v-model:category="expense.category"
