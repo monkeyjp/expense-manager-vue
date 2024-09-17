@@ -111,6 +111,7 @@ const saveExpense = () => {
         @close-modal="closeModal"
         @save-expense="saveExpense"
         :modal="modal"
+        :available="available"
         v-model:name="expense.name"
         v-model:amount="expense.amount"
         v-model:category="expense.category"
