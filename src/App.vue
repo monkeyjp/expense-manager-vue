@@ -42,6 +42,28 @@ watch(
   }
 );
 
+watch(
+  modal,
+  () => {
+    if (!modal.show) {
+      resetExpenseState();
+    }
+  },
+  {
+    deep: true,
+  }
+);
+
+const resetExpenseState = () => {
+  Object.assign(expense, {
+    name: "",
+    amount: "",
+    category: "",
+    id: null,
+    date: Date.now(),
+  });
+};
+
 const defineBudged = (amount) => {
   budged.value = amount;
   available.value = amount;
@@ -62,18 +84,26 @@ const closeModal = () => {
 };
 
 const saveExpense = () => {
-  expenses.value.push({
-    ...expense,
-    id: IdGenerator(),
-  });
+  if (expense.id) {
+    const { id } = expense;
+    const i = expenses.value.findIndex((expense) => expense.id === id);
+    expenses.value[i] = { ...expense };
+  } else {
+    expenses.value.push({
+      ...expense,
+      id: IdGenerator(),
+    });
+  }
   closeModal();
-  Object.assign(expense, {
-    name: "",
-    amount: "",
-    category: "",
-    id: null,
-    date: Date.now(),
-  });
+  resetExpenseState();
+};
+
+const selectExpense = (id) => {
+  const expenseToEdit = expenses.value.filter(
+    (expense) => expense.id === id
+  )[0];
+  Object.assign(expense, expenseToEdit);
+  showModal();
 };
 </script>
 
@@ -100,6 +130,7 @@ const saveExpense = () => {
           v-for="expense in expenses"
           :key="expense.id"
           :expense="expense"
+          @select-expense="selectExpense"
         />
       </div>
 
