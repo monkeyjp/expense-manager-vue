@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch, computed } from "vue";
+import { ref, reactive, watch, computed, onMounted } from "vue";
 import Budged from "./components/Budged.vue";
 import ManageBudged from "./components/ManageBudged.vue";
 import Modal from "./components/Modal.vue";
@@ -38,6 +38,7 @@ watch(
     );
     spent.value = totalSpent;
     available.value = budged.value - totalSpent;
+    localStorage.setItem("expenses", JSON.stringify(expenses.value));
   },
   {
     deep: true,
@@ -55,6 +56,22 @@ watch(
     deep: true,
   }
 );
+
+watch(budged, () => {
+  localStorage.setItem("budged", budged.value);
+});
+
+onMounted(() => {
+  const budgedStorage = localStorage.getItem("budged");
+  if (budgedStorage) {
+    budged.value = Number(budgedStorage);
+    available.value = Number(budgedStorage);
+  }
+  const expensesStorage = localStorage.getItem("expenses");
+  if (expensesStorage) {
+    expenses.value = JSON.parse(expensesStorage);
+  }
+});
 
 const resetExpenseState = () => {
   Object.assign(expense, {
