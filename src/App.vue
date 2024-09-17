@@ -1,9 +1,10 @@
 <script setup>
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, computed } from "vue";
 import Budged from "./components/Budged.vue";
 import ManageBudged from "./components/ManageBudged.vue";
 import Modal from "./components/Modal.vue";
 import Expense from "./components/Expense.vue";
+import Filters from "./components/Filters.vue";
 import { IdGenerator } from "./helpers";
 
 import newExpenseIcon from "./assets/img/nuevo-gasto.svg";
@@ -16,6 +17,7 @@ const modal = reactive({
 const budged = ref(0);
 const available = ref(0);
 const spent = ref(0);
+const filter = ref("");
 
 const expense = reactive({
   name: "",
@@ -105,6 +107,20 @@ const selectExpense = (id) => {
   Object.assign(expense, expenseToEdit);
   showModal();
 };
+
+const deleteExpense = (id) => {
+  expenses.value = expenses.value.filter((expense) => expense.id != id);
+  closeModal();
+};
+
+const filteredExpenses = computed(() => {
+  if (filter.value) {
+    return expenses.value.filter(
+      (expense) => expense.category === filter.value
+    );
+  }
+  return expenses.value;
+});
 </script>
 
 <template>
@@ -122,12 +138,15 @@ const selectExpense = (id) => {
       </div>
     </header>
     <main v-if="budged > 0">
+      <Filters v-model:filter="filter" />
       <div class="expense-list container">
         <h2>
-          {{ expenses.length > 0 ? "Expenses" : "There are no expenses" }}
+          {{
+            filteredExpenses.length > 0 ? "Expenses" : "There are no expenses"
+          }}
         </h2>
         <Expense
-          v-for="expense in expenses"
+          v-for="expense in filteredExpenses"
           :key="expense.id"
           :expense="expense"
           @select-expense="selectExpense"
@@ -141,6 +160,7 @@ const selectExpense = (id) => {
         v-if="modal.show"
         @close-modal="closeModal"
         @save-expense="saveExpense"
+        @delete-expense="deleteExpense"
         :modal="modal"
         :available="available"
         :id="expense.id"

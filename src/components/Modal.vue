@@ -11,6 +11,7 @@ const emit = defineEmits([
   "update:name",
   "update:amount",
   "update:category",
+  "delete-expense",
 ]);
 const props = defineProps({
   modal: {
@@ -140,6 +141,14 @@ const isEditing = computed(() => {
           :value="[isEditing ? 'Save Changes' : 'Add Expense']"
         />
       </form>
+      <button
+        type="button"
+        class="btn-delete"
+        v-if="isEditing"
+        @click="$emit('delete-expense', id)"
+      >
+        Delete Expense
+      </button>
     </div>
   </div>
 </template>
@@ -216,5 +225,16 @@ const isEditing = computed(() => {
   color: var(--blanco);
   font-weight: 700;
   cursor: pointer;
+}
+.btn-delete {
+  padding: 1rem;
+  width: 100%;
+  background-color: #ef4444;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--blanco);
+  margin-top: 10rem;
+  cursor: pointer;
+  border: none;
 }
 </style>
