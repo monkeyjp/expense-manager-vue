@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import Budged from "./components/Budged.vue";
 import ManageBudged from "./components/ManageBudged.vue";
 import Modal from "./components/Modal.vue";
@@ -15,6 +15,7 @@ const modal = reactive({
 
 const budged = ref(0);
 const available = ref(0);
+const spent = ref(0);
 
 const expense = reactive({
   name: "",
@@ -25,6 +26,21 @@ const expense = reactive({
 });
 
 const expenses = ref([]);
+
+watch(
+  expenses,
+  () => {
+    const totalSpent = expenses.value.reduce(
+      (total, expense) => expense.amount + total,
+      0
+    );
+    spent.value = totalSpent;
+    available.value = budged.value - totalSpent;
+  },
+  {
+    deep: true,
+  }
+);
 
 const defineBudged = (amount) => {
   budged.value = amount;
@@ -67,7 +83,12 @@ const saveExpense = () => {
       <h1>Expenses Manager</h1>
       <div class="container-header container shadow">
         <Budged v-if="budged === 0" @define-budged="defineBudged" />
-        <ManageBudged v-else :budged="budged" :available="available" />
+        <ManageBudged
+          v-else
+          :budged="budged"
+          :available="available"
+          :spent="spent"
+        />
       </div>
     </header>
     <main v-if="budged > 0">

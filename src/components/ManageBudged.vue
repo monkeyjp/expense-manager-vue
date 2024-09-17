@@ -7,8 +7,14 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  available: Number,
-  required: true,
+  available: {
+    type: Number,
+    required: true,
+  },
+  spent: {
+    type: Number,
+    required: true,
+  },
 });
 </script>
 
@@ -19,9 +25,9 @@ const props = defineProps({
     </div>
     <div class="budged-container">
       <button class="reset-app">Reset App</button>
-      <p><span>Budged:</span> {{ quantityFormater(available) }}</p>
+      <p><span>Budged:</span> {{ quantityFormater(budged) }}</p>
       <p><span>Available:</span> {{ quantityFormater(available) }}</p>
-      <p><span>Spent:</span>$0</p>
+      <p><span>Spent:</span>{{ quantityFormater(spent) }}</p>
     </div>
   </div>
 </template>
