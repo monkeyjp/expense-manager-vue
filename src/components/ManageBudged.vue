@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from "vue";
 import CircleProgress from "vue3-circle-progress";
 import "vue3-circle-progress/dist/circle-progress.css";
 import { quantityFormater } from "../helpers";
@@ -19,13 +20,18 @@ const props = defineProps({
 });
 
 defineEmits(["reset-app"]);
+
+const percentage = computed(() => {
+  return parseInt(((props.budged - props.available) / props.budged) * 100);
+});
 </script>
 
 <template>
   <div class="two-columns">
     <div class="graphic-container">
+      <p class="percentage">{{ percentage }}%</p>
       <CircleProgress
-        :percent="20"
+        :percent="percentage"
         :size="250"
         :border-width="25"
         :border-bg-width="25"
@@ -44,6 +50,23 @@ defineEmits(["reset-app"]);
   </div>
 </template>
 <style scoped>
+.graphic-container {
+  position: relative;
+}
+
+.percentage {
+  position: absolute;
+  margin: auto;
+  top: calc(50% - 1.5rem);
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 100;
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--gris-oscuro);
+}
+
 .two-columns {
   display: flex;
   flex-direction: column;
