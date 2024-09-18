@@ -1,5 +1,6 @@
 <script setup>
-import image from "../assets/img/grafico.jpg";
+import CircleProgress from "vue3-circle-progress";
+import "vue3-circle-progress/dist/circle-progress.css";
 import { quantityFormater } from "../helpers";
 
 const props = defineProps({
@@ -16,15 +17,26 @@ const props = defineProps({
     required: true,
   },
 });
+
+defineEmits(["reset-app"]);
 </script>
 
 <template>
   <div class="two-columns">
     <div class="graphic-container">
-      <img :src="image" />
+      <CircleProgress
+        :percent="20"
+        :size="250"
+        :border-width="25"
+        :border-bg-width="25"
+        fill-color="#3b82f6"
+        empty-color="#e1e1e1"
+      />
     </div>
     <div class="budged-container">
-      <button class="reset-app">Reset App</button>
+      <button class="reset-app" type="button" @click="$emit('reset-app')">
+        Reset App
+      </button>
       <p><span>Budged:</span> {{ quantityFormater(budged) }}</p>
       <p><span>Available:</span> {{ quantityFormater(available) }}</p>
       <p><span>Spent:</span>{{ quantityFormater(spent) }}</p>

@@ -138,6 +138,11 @@ const filteredExpenses = computed(() => {
   }
   return expenses.value;
 });
+
+const resetApp = () => {
+  expenses.value = [];
+  budged.value = 0;
+};
 </script>
 
 <template>
@@ -151,6 +156,7 @@ const filteredExpenses = computed(() => {
           :budged="budged"
           :available="available"
           :spent="spent"
+          @reset-app="resetApp"
         />
       </div>
     </header>
